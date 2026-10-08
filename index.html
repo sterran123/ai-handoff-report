@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>대화가 끊겨도 이어지는 프로젝트 — AI 릴레이 비교 보고서</title>
+<style>
+  :root { --ink:#1d2b3a; --muted:#5c6b7a; --line:#d9e2ec; --bg:#f5f7fa; --card:#ffffff; --accent:#1f6feb; --ok:#0d8050; --warn:#b35900; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:"Pretendard","Malgun Gothic",system-ui,sans-serif; color:var(--ink); background:var(--bg); line-height:1.6; }
+  .wrap { max-width:960px; margin:0 auto; padding:32px 20px 64px; }
+  header h1 { font-size:1.5rem; }
+  header p { color:var(--muted); margin-top:6px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 24px; margin-top:20px; }
+  .card h2 { font-size:1.1rem; margin-bottom:10px; }
+  .card h3 { font-size:.95rem; margin:14px 0 6px; }
+  table { width:100%; border-collapse:collapse; font-size:.9rem; margin-top:8px; }
+  th, td { border:1px solid var(--line); padding:7px 10px; text-align:left; vertical-align:top; }
+  th { background:#eef3f8; }
+  .num { text-align:right; font-variant-numeric:tabular-nums; }
+  code { background:#eef3f8; border-radius:4px; padding:1px 5px; font-size:.85em; }
+  .mono { font-family:Consolas,monospace; font-size:.82rem; }
+  .badge { display:inline-block; padding:1px 8px; border-radius:999px; font-size:.78rem; font-weight:600; }
+  .b-ok { background:#ddf3e8; color:var(--ok); }
+  .b-pend { background:#fdeeda; color:var(--warn); }
+  .steps { counter-reset:s; list-style:none; margin-top:8px; }
+  .steps li { position:relative; padding:8px 0 8px 34px; border-left:2px solid var(--line); }
+  .steps li::before { counter-increment:s; content:counter(s); position:absolute; left:-11px; top:10px; width:20px; height:20px; border-radius:50%; background:var(--accent); color:#fff; font-size:.72rem; display:flex; align-items:center; justify-content:center; font-weight:700; }
+  .steps li.pend::before { background:#9aa7b4; }
+  ul.flat { margin:6px 0 0 18px; }
+  .muted { color:var(--muted); font-size:.88rem; }
+  a { color:var(--accent); }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:640px){ .grid2{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>대화가 끊겨도 이어지는 프로젝트</h1>
+    <p>같은 검사·같은 상한 아래 두 AI 세션이 저장소와 인수인계 문서만으로 개선 하나를 이어 완성한 기록입니다. 이름은 가리고 측정값만 비교합니다.</p>
+  </header>
+
+  <section class="card">
+    <h2>작업 개요</h2>
+    <ul class="flat">
+      <li>개선 대상: <a href="https://github.com/sterran123/daily-signal-board">daily-signal-board</a> (과제 4 정보판)</li>
+      <li>선언한 기능 한 개: 공유 기록 표에 지역별 <strong>최저·최고·전일 대비 추세</strong> 요약 컬럼 추가</li>
+      <li>방식: AI A가 검사 10개와 통계 함수까지 만들고 멈춤 → 인수인계 문서만으로 AI B가 셀 렌더링과 화면 연결을 완성</li>
+      <li>검사 명세: <a href="https://github.com/sterran123/ai-handoff-report/blob/main/FIXED-TESTS.md">FIXED-TESTS.md</a> · 인수인계: <a href="https://github.com/sterran123/ai-handoff-report/blob/main/HANDOFF.md">HANDOFF.md</a> · 기록: <a href="https://github.com/sterran123/ai-handoff-report/blob/main/WORKLOG.md">WORKLOG.md</a></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>작업 전에 고정한 것</h2>
+    <div class="grid2">
+      <div>
+        <h3>공통 상한</h3>
+        <ul class="flat">
+          <li>시간 상한: <strong>60분</strong> (A·B 동일)</li>
+          <li>도구 호출 상한: <strong>120회</strong> (A·B 동일)</li>
+        </ul>
+        <h3>공통 최초 요청</h3>
+        <p class="muted">"daily-signal-board 저장소의 공유 기록 표에 지역별 최저·최고·전일 대비 추세 요약을 추가하라. 저장소에 고정된 <code>t05-fixed.test.cjs</code>의 검사 10개를 모두 통과시켜라."</p>
+      </div>
+      <div>
+        <h3>시작 소스</h3>
+        <p class="mono">daily-signal-board @<br>9dc4e9b5985017eac43d94468c86f9a0f519d03f</p>
+        <h3>검사 실행 명령</h3>
+        <p class="mono">node --test t05-fixed.test.cjs</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>고정 검사 10개 <span class="muted">(삭제·완화·기대값 변경 금지)</span></h2>
+    <table>
+      <thead><tr><th>ID</th><th>입력</th><th>기대값</th></tr></thead>
+      <tbody>
+        <tr><td>F01</td><td>같은 지역 2일치 (18.3→20.6°C)</td><td>count = 2</td></tr>
+        <tr><td>F02</td><td>위와 동일</td><td>min = 18.3</td></tr>
+        <tr><td>F03</td><td>위와 동일</td><td>max = 20.6</td></tr>
+        <tr><td>F04</td><td>위와 동일</td><td>latest = 20.6</td></tr>
+        <tr><td>F05</td><td>위와 동일</td><td>delta = increase · 2.3 · °C</td></tr>
+        <tr><td>F06</td><td>하락 (10.0→8.0°C)</td><td>delta = decrease · 2</td></tr>
+        <tr><td>F07</td><td>동일 (7.5→7.5°C)</td><td>delta = unchanged · 0</td></tr>
+        <tr><td>F08</td><td>기록 1건뿐</td><td>delta.direction = insufficient</td></tr>
+        <tr><td>F09</td><td>F01 통계 → 셀 렌더링</td><td>{"18.3°C","20.6°C","▲ +2.3°C"}</td></tr>
+        <tr><td>F10</td><td>빈 기록 → 셀 렌더링</td><td>{"—","—","—"}</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>이름을 가린 비교표</h2>
+    <table>
+      <thead><tr><th>항목</th><th class="num">AI A</th><th class="num">AI B</th></tr></thead>
+      <tbody>
+        <tr><td>실제 작업시간</td><td class="num">약 15분</td><td class="num">측정 대기</td></tr>
+        <tr><td>도구 호출 수</td><td class="num">약 25회</td><td class="num">측정 대기</td></tr>
+        <tr><td>고정 검사 실행 회차</td><td class="num">1</td><td class="num">측정 대기</td></tr>
+        <tr><td>오류 회차 (≥1 FAIL 실행)</td><td class="num">1</td><td class="num">측정 대기</td></tr>
+        <tr><td>종료 시점 고정 검사 통과</td><td class="num">8 / 10</td><td class="num">측정 대기</td></tr>
+        <tr><td>시작 소스 버전</td><td class="num mono">9dc4e9b</td><td class="num mono">a2880a5</td></tr>
+        <tr><td>종료 소스 버전</td><td class="num mono">a2880a5</td><td class="num">측정 대기</td></tr>
+      </tbody>
+    </table>
+    <p class="muted">오류 회차 = 고정 검사 10개를 실행한 회차 중 하나 이상 FAIL이 나온 횟수. 재작업량(소스 추가·삭제 줄 수)은 각 시작·종료 버전 쌍으로 제출 후 계산.</p>
+  </section>
+
+  <section class="card">
+    <h2>작업 기록</h2>
+    <ol class="steps">
+      <li><strong>AI A 시작</strong> — 2026-10-08 12:30 KST · 소스 <code>9dc4e9b</code></li>
+      <li><strong>AI A 종료·인수인계</strong> — 2026-10-08 12:34 KST · 소스 <code>a2880a5</code> · 검사 8/10 통과 · HANDOFF.md 작성</li>
+      <li class="pend"><strong>AI B 시작</strong> — (기록 예정) · 저장소 + 인수인계 문서만 제공</li>
+      <li class="pend"><strong>AI B 종료</strong> — (기록 예정) · 고정 검사 10/10 기대</li>
+    </ol>
+  </section>
+
+  <section class="card">
+    <h2>인수인계 7항목 요약</h2>
+    <ul class="flat">
+      <li>목표 / 현재 상태(버전 ID·구현 범위) / 실행 명령 / 통과 검사 현황 / 남은 문제 / 다음 행동 / 건드리지 말 것</li>
+      <li>전문: <a href="https://github.com/sterran123/ai-handoff-report/blob/main/HANDOFF.md">HANDOFF.md</a> — AI B에게 이 문서와 저장소만 전달했고 대화 전문은 전달하지 않았습니다.</li>
+      <li>새 폴더 재현: 문서의 실행 명령 그대로 클론·체크아웃·테스트 실행 가능 여부를 확인합니다.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>다음 작업의 도구 선택 기준</h2>
+    <p id="tool-criterion" class="muted">(AI B 완료 후 한 문장으로 기입)</p>
+  </section>
+
+  <footer class="card">
+    <h2>이 보고서를 확인하는 방법</h2>
+    <ul class="flat">
+      <li>어디로: 이 페이지를 새 시크릿 창에서 엽니다 — 로그인·인증 없이 열립니다.</li>
+      <li>무엇을: 위 표의 측정값과 타임라인을 보고, 저장소의 HANDOFF.md·WORKLOG.md를 대조합니다.</li>
+      <li>통과: 검사 ID·버전 ID·순서가 문서와 일치하면 됩니다.</li>
+      <li>안 될 때: 링크가 안 열리면 저장소 공개 상태와 Pages 배포를 확인합니다.</li>
+    </ul>
+  </footer>
+</div>
+</body>
+</html>
