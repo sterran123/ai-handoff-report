@@ -96,13 +96,13 @@
     <table>
       <thead><tr><th>항목</th><th class="num">AI A</th><th class="num">AI B</th></tr></thead>
       <tbody>
-        <tr><td>실제 작업시간</td><td class="num">약 15분</td><td class="num">측정 대기</td></tr>
-        <tr><td>도구 호출 수</td><td class="num">약 25회</td><td class="num">측정 대기</td></tr>
-        <tr><td>고정 검사 실행 회차</td><td class="num">1</td><td class="num">측정 대기</td></tr>
-        <tr><td>오류 회차 (≥1 FAIL 실행)</td><td class="num">1</td><td class="num">측정 대기</td></tr>
-        <tr><td>종료 시점 고정 검사 통과</td><td class="num">8 / 10</td><td class="num">측정 대기</td></tr>
+        <tr><td>실제 작업시간</td><td class="num">약 15분</td><td class="num">약 5분</td></tr>
+        <tr><td>도구 호출 수</td><td class="num">약 25회</td><td class="num">약 40회</td></tr>
+        <tr><td>고정 검사 실행 회차</td><td class="num">1</td><td class="num">2</td></tr>
+        <tr><td>오류 회차 (≥1 FAIL 실행)</td><td class="num">1</td><td class="num">0</td></tr>
+        <tr><td>종료 시점 고정 검사 통과</td><td class="num">8 / 10</td><td class="num">10 / 10</td></tr>
         <tr><td>시작 소스 버전</td><td class="num mono">9dc4e9b</td><td class="num mono">a2880a5</td></tr>
-        <tr><td>종료 소스 버전</td><td class="num mono">a2880a5</td><td class="num">측정 대기</td></tr>
+        <tr><td>종료 소스 버전</td><td class="num mono">a2880a5</td><td class="num mono">e427cdf</td></tr>
       </tbody>
     </table>
     <p class="muted">오류 회차 = 고정 검사 10개를 실행한 회차 중 하나 이상 FAIL이 나온 횟수. 재작업량(소스 추가·삭제 줄 수)은 각 시작·종료 버전 쌍으로 제출 후 계산.</p>
@@ -113,8 +113,8 @@
     <ol class="steps">
       <li><strong>AI A 시작</strong> — 2026-10-08 12:30 KST · 소스 <code>9dc4e9b</code></li>
       <li><strong>AI A 종료·인수인계</strong> — 2026-10-08 12:34 KST · 소스 <code>a2880a5</code> · 검사 8/10 통과 · HANDOFF.md 작성</li>
-      <li class="pend"><strong>AI B 시작</strong> — (기록 예정) · 저장소 + 인수인계 문서만 제공</li>
-      <li class="pend"><strong>AI B 종료</strong> — (기록 예정) · 고정 검사 10/10 기대</li>
+      <li><strong>AI B 시작</strong> — 2026-10-08 12:47 KST · 소스 <code>a2880a5</code> · 저장소 + 인수인계 문서만 제공</li>
+      <li><strong>AI B 종료</strong> — 2026-10-08 12:52 KST · 소스 <code>e427cdf</code> · 고정 검사 10/10 통과 · 회귀 검사 12/12 유지</li>
     </ol>
   </section>
 
@@ -129,7 +129,7 @@
 
   <section class="card">
     <h2>다음 작업의 도구 선택 기준</h2>
-    <p id="tool-criterion" class="muted">(AI B 완료 후 한 문장으로 기입)</p>
+    <p id="tool-criterion" class="muted">고정 검사 파일과 인수인계 문서의 셀 문자열 규격을 먼저 대조해 순수 함수(<code>core.js</code>)부터 완성하고, 화면 연결(<code>app.js</code>)은 기존 렌더 패턴을 따른 뒤 고정 검사와 회귀 검사를 같은 세션에서 함께 확인한다.</p>
   </section>
 
   <footer class="card">
